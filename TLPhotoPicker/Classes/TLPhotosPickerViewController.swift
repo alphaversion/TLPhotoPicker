@@ -1053,7 +1053,12 @@ extension TLPhotosPickerViewController: UICollectionViewDelegate,UICollectionVie
             }else {
                 queue.async { [weak self, weak cell] in
                     guard let `self` = self else { return }
-                    let requestID = self.photoLibrary.imageAsset(asset: phAsset, size: self.thumbnailSize, completionBlock: { (image,complete) in
+                    let options = PHImageRequestOptions()
+                    options.isSynchronous = false
+                    options.resizeMode = .none
+                    options.deliveryMode = .opportunistic
+                    options.isNetworkAccessAllowed = true
+                    let requestID = self.photoLibrary.imageAsset(asset: phAsset, size: self.thumbnailSize, options: options, completionBlock: { (image,complete) in
                         DispatchQueue.main.async {
                             if self.requestIDs[indexPath] != nil {
                                 cell?.imageView?.image = image
